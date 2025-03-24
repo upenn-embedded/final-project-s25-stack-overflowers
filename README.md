@@ -1,10 +1,11 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/WXeqVgks)
+
 # final-project-skeleton
 
-* Team Number:
-* Team Name:
-* Team Members:
-* GitHub Repository URL:
+* Team Number: 14
+* Team Name: Stack Overflowers
+* Team Members: Sofia Hedlund and Amanda Tapia-Garbelloto
+* GitHub Repository URL: https://github.com/upenn-embedded/final-project-s25-stack-overflowers.git
 * GitHub Pages Website URL: [for final submission]
 
 ## Final Project Proposal
@@ -13,17 +14,25 @@
 
 *In a few sentences, describe your final project.*
 
+We want to make a braille printer that the user can input text into with a keyboard and have it print out the text into readable braille bumps. We plan to do this by 3D printing braille letters onto a stamp that will then rotated according to the text input and stamped down onto the paper with a motor. This project will use power management, interrupts for reading from the keyboard, and timers to control the stepper motor.
+
 ### 2. Motivation
 
 *What is the problem that you are trying to solve? Why is this project interesting? What is the intended purpose?*
 
+The project aims to enhance accessibility for people with reduced vision. By automatically transforming text into braille, people who can't see text are able to expand their integration to reading materials by possessing a personal device that can make any text available for them without requiring extra translators or specialized equipment.
+
 ### 3. System Block Diagram
 
 *Show your high level design, as done in WS1 and WS2. What are the critical components in your system? How do they communicate (I2C?, interrupts, ADC, etc.)? What power regulation do you need?*
+![flow](flow.png)
 
 ### 4. Design Sketches
 
 *What will your project look like? Do you have any critical design features? Will you need any special manufacturing techniques to achieve your vision, like power tools, laser cutting, or 3D printing?*
+![DesignSketch](DesignSketch.png)
+
+We will need to 3D print the braille stamp to attach to the motor and also need some kind of container to hold the LCD and the wiring needed to power the system. We will also have to 3D print a stand to hold the linear actuator.
 
 ### 5. Software Requirements Specification (SRS)
 
@@ -35,14 +44,21 @@
 
 Here, you will define any special terms, acronyms, or abbreviations you plan to use for hardware
 
+PWM- Pulse Width Modulation
+
+ASCII- American Standard Code for Information Exchange
+
+LCD- Liquid Crystal Display
+
 **5.2 Functionality**
 
-| ID     | Description                                                                                                                                                                                                              |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| SRS-01 | The IMU 3-axis acceleration will be measured with 16-bit depth every 100 milliseconds +/-10 milliseconds                                                                                                                 |
-| SRS-02 | The distance sensor shall operate and report values at least every .5 seconds.                                                                                                                                           |
-| SRS-03 | Upon non-nominal distance detected (i.e., the trap mechanism has changed at least 10 cm from the nominal range), the system shall be able to detect the change and alert the user in a timely manner (within 5 seconds). |
-| SRS-04 | Upon a request from the user, the system shall get an image from the internal camera and upload the image to the user system within 10s.                                                                                 |
+| ID     | Description                                                                                                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| SRS-01 | The microcontroller will process each letter of the text input and convert it to its corresponding braille.                                |
+| SRS-02 | This recognition will relate the letters to a certain degree of rotation in our stamp machine.                                             |
+| SRS-03 | The system will then send PWM signals to control the rotation of our stamp.                                                                |
+| SRS-04 | Stamping should be at precise timing, so that the stepper motor can finish its rotation completely before stamping to prevent misalignment |
+| SRS-05 | The software will have debouncing to filter out noise from the keyboard.                                                                   |
 
 ### 6. Hardware Requirements Specification (HRS)
 
@@ -54,35 +70,46 @@ Here, you will define any special terms, acronyms, or abbreviations you plan to 
 
 Here, you will define any special terms, acronyms, or abbreviations you plan to use for hardware
 
+Stepper Motor- DC motor that has very precise conotrol that will help us avoid error when rotating the stamp to the position of the letter.
+
+Linear Actuator- Moves in a straight line so that we can move the stamp up and down.
+
 **6.2 Functionality**
 
-| ID     | Description                                                                                                                        |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| HRS-01 | A distance sensor shall be used for obstacle detection. The sensor shall detect obstacles at a maximum distance of at least 10 cm. |
-| HRS-02 | A noisemaker shall be inside the trap with a strength of at least 55 dB.                                                           |
-| HRS-03 | An electronic motor shall be used to reset the trap remotely and have a torque of 40 Nm in order to reset the trap mechanism.      |
-| HRS-04 | A camera sensor shall be used to capture images of the trap interior. The resolution shall be at least 480p.                       |
+| ID     | Description                                                                                                  |
+| ------ | ------------------------------------------------------------------------------------------------------------ |
+| HRS-01 | The device will require a keyboard module for text entry, this will communicate with the ATmega238 via PS/2. |
+| HRS-02 | A LCD screen will display the characters typed into the keyboard..                                           |
+| HRS-03 | A stepper motor to rotate our braille stamp.                                                                |
+| HRS-04 | A linear actuator will move the stamp up and down to imprint the letters on to the paper                     |
+| HRS-05 | The power system will need 5V and 12V to power the MCU, LCD, Stepper, and Linear Actuator.                   |
 
-### 7. Bill of Materials (BOM)
+### 6. Bill of Materials (BOM)
 
 *What major components do you need and why? Try to be as specific as possible. Your Hardware & Software Requirements Specifications should inform your component choices.*
 
 *In addition to this written response, copy the Final Project BOM Google Sheet and fill it out with your critical components (think: processors, sensors, actuators). Include the link to your BOM in this section.*
 
+We will need a stepper motor to spin the braille stamp and a servo motor to move the stamp up and down. We will also need a keyboard so that the user can input text and an LCD screen to display it on. Finally, we will need braille paper that we can print on.
+
+[BOM](https://docs.google.com/spreadsheets/d/10AtQ8pPZeS8G-I5d4TY12WMqAhfvfrOR0J54DZgVhsI/edit?usp=sharing)
+
 ### 8. Final Demo Goals
 
 *How will you demonstrate your device on demo day? Will it be strapped to a person, mounted on a bicycle, require outdoor space? Think of any physical, temporal, and other constraints that could affect your planning.*
+
+We will demonstrate our device on demo day by showing it printing braille writing from the keyboard onto paper. Some physical constraints are that we need to have enough table space for the keyboard and the braille stamp and because we are stamping letter-by-letter, printing out a word or a short phrase will be more realistic than a full sentence.
 
 ### 9. Sprint Planning
 
 *You've got limited time to get this project done! How will you plan your sprint milestones? How will you distribute the work within your team? Review the schedule in the final project manual for exact dates.*
 
-| Milestone  | Functionality Achieved | Distribution of Work |
-| ---------- | ---------------------- | -------------------- |
-| Sprint #1  |                        |                      |
-| Sprint #2  |                        |                      |
-| MVP Demo   |                        |                      |
-| Final Demo |                        |                      |
+| Milestone  | Functionality Achieved                                                                              | Distribution of Work                                         |
+| ---------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Sprint #1  | -3D print braille stamp<br />-Code the rotating for the stamp                                       | 3D printing- Amanda<br />Code- Sofia                         |
+| Sprint #2  | -add keyboard/LCD screen<br />-3D print parts to move stamp up and down<br />-debug rotation issues | Keyboard/LCD- Sofia<br />3D print- Amanda <br />Debug- both |
+| MVP Demo   | -create code to move stamp up and down<br />-implement movement with linear actuator                | Code/movement- both                                          |
+| Final Demo | -debug issues with motors                                                                           | Debug- both                                                  |
 
 **This is the end of the Project Proposal section. The remaining sections will be filled out based on the milestone schedule.**
 
