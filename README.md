@@ -4,7 +4,7 @@
 
 * Team Number: 14
 * Team Name: Stack Overflowers
-* Team Members: Sofia Hedlund and Amanda Tapia-Garbelloto
+* Team Members: Sofia Hedlund and Amanda Tapia Garbelloto
 * GitHub Repository URL: https://github.com/upenn-embedded/final-project-s25-stack-overflowers.git
 * GitHub Pages Website URL: [for final submission]
 
@@ -54,10 +54,10 @@ LCD- Liquid Crystal Display
 
 | ID     | Description                                                                                                                                |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| SRS-01 | The microcontroller will process each letter of the text input and convert it to its corresponding braille.                                |
-| SRS-02 | This recognition will relate the letters to a certain degree of rotation in our stamp machine.                                             |
-| SRS-03 | The system will then send PWM signals to control the rotation of our stamp.                                                                |
-| SRS-04 | Stamping should be at precise timing, so that the stepper motor can finish its rotation completely before stamping to prevent misalignment |
+| SRS-01 | The microcontroller will process each letter of the text input and connect it to its corresponding braille. We can test its accuracy by plugging in sample characters and evaluating the different outputs of the MCU.                                |
+| SRS-02 | The system will translate each recognized letter into a PWM signals sending specific rotation angle for the Braille stamp mechanism, ensuring accurate letter selection. In this phase, we can actually measure the rotation angle for each character once we have our stamper connected.                                             |
+| SRS-03 | The stamping should be precisely timed, ensuring that the stepper motor finishes its rotation completely before the stamp is pressed again to prevent misalignment.                                                                |
+| SRS-04 | The linear actuator will move the stamping mechanism, positioning the stamp at the correct location on the paper. The actuator should only move the stamp after it is pressed. |
 | SRS-05 | The software will have debouncing to filter out noise from the keyboard.                                                                   |
 
 ### 6. Hardware Requirements Specification (HRS)
@@ -79,10 +79,10 @@ Linear Actuator- Moves in a straight line so that we can move the stamp up and d
 | ID     | Description                                                                                                  |
 | ------ | ------------------------------------------------------------------------------------------------------------ |
 | HRS-01 | The device will require a keyboard module for text entry, this will communicate with the ATmega238 via PS/2. |
-| HRS-02 | A LCD screen will display the characters typed into the keyboard..                                           |
-| HRS-03 | A stepper motor to rotate our braille stamp.                                                                |
-| HRS-04 | A linear actuator will move the stamp up and down to imprint the letters on to the paper                     |
-| HRS-05 | The power system will need 5V and 12V to power the MCU, LCD, Stepper, and Linear Actuator.                   |
+| HRS-02 | It will also display the typed text to a LCD screen (I2C interface) to provide user feedback before printing. We will test the keyboard and the screen by seeing whether the later is displaying the correct keyboard inputs in real time.                                           |
+| HRS-03 | The MCU will generate a PWM signal to control a stepper motor, which will rotate the Braille stamp mechanism to the correct character position. While working on this part we will ensure that the PWM signals are accurately rotating the stamp with a negligible error accuracy                                                               |
+| HRS-04 | A linear actuator will move the stamp up and down to imprint the letters on to the paper A motor driver will be used to control the linear actuator, ensuring reliable movement without overloading the MCU.                    |
+| HRS-05 | The power system will need 12V power source and a buck converter for 5V to power the MCU, LCD, Stepper, and Linear Actuator.                   |
 
 ### 6. Bill of Materials (BOM)
 
@@ -98,7 +98,7 @@ The major components that we need are a stepper motor/driver to spin the braille
 
 *How will you demonstrate your device on demo day? Will it be strapped to a person, mounted on a bicycle, require outdoor space? Think of any physical, temporal, and other constraints that could affect your planning.*
 
-We will demonstrate our device on demo day by showing it printing braille writing from the keyboard onto paper. Some physical constraints are that we need to have enough table space for the keyboard and the braille stamp and because we are stamping letter-by-letter, printing out a word or a short phrase will be more realistic than a full sentence.
+We will demonstrate our device on demo day by entering in text to the keyboard, which will then be displayed on the LCD and then printed in braille by the stepper motor which will rotate to position the correct letter and the linear actuator which will stamp it down. Some physical constraints are that we need to have enough table space for the keyboard, LCD container, stepper motor, and paper. Because we are stamping the text out letter-by-letter, printing out a word or a short phrase will be more realistic to demonstrate out project without excessive time delay. At the end of the demo, the user can feel the braille stamped out on the paper, and can also compare it against the text on the LCD. 
 
 ### 9. Sprint Planning
 
