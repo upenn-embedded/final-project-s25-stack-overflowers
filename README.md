@@ -115,7 +115,9 @@ We will demonstrate our device on demo day by entering in text to the keyboard, 
 
 ### Last week's progress
 
-We are uploading the code for the LCD screen and for our current relation between each character and their solenoid pattern. 
+During this sprint, we finished the code to connect the serial terminal to the LCD screen so that it displays the text the user inputs. We also implemented the logic behind mapping the characters to their braille representations in binary, and the code to turn the pins the solenoids will be attached on to HIGH. We also started CAD for the structure that will hold the solenoids above the paper. We have committed the code for this part on github.
+
+![1743798297162](image/README/1743798297162.png)
 
 ### Current state of project
 
@@ -129,9 +131,9 @@ We have now ordered all the hardware parts needed for the project, but they have
 
 ### Next week's plans
 
-Next week we are going to be working on the hardware and testing the actual implementation of our code to the devices as soon as they arrive. So far we have the code for the solenoids push and pull, however since they were ordered later, we are probably going to implement first the movement of the linear actuator, which should follow the x-axis from right to left (since we are going to be stamping upside down).
+Next week we are going to be working on the hardware and testing the actual implementation of our code to the devices as soon as they arrive. So far we have the code for the solenoids push and pull, however since they were ordered later, we are probably going to implement first the movement of the linear actuator, which should follow the x-axis from right to left (since we are going to be stamping upside down).  Sofia will be working on combining the software and the hardware and debugging any issues that come up which will take around 5 hours, and will be considered “done” once the solenoids correctly move up and down with the character inputs and the linear actuator is able to move corresponding to each character.
 
-We are also going to use the 3D printers to build the support for the solenoids and the box to keep most of our hardware connections, including the breadboards and the ATmega238.
+We are also going to use the 3D printers to build the support for the solenoids and the box to keep most of our hardware connections, including the breadboards and ATmega238. Amanda will be working on 3D printing these supports with SolidWorks, which we are estimating will take around 5 hours and will be considered “done” once we send off the print request.
 
 ## Sprint Review #2
 
