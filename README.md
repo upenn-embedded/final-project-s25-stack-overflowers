@@ -115,9 +115,23 @@ We will demonstrate our device on demo day by entering in text to the keyboard, 
 
 ### Last week's progress
 
+We are uploading the code for the LCD screen and for our current relation between each character and their solenoid pattern. 
+
 ### Current state of project
 
-### Next week's plan
+After the project presentation we got some feedback from the class on how to improve the stamping mechanism, so instead of using a wheel we will be working with six solenoids to support the full braille pattern.
+
+We also took the professor's advice and are using our serial terminal to type out what we want to be translated to braille, instead of connecting another keyboard.
+
+So, for each letter typed into the terminal, we have built the code that is recognizing them and translating it to the braille pattern, relating each dot to its correspondent solenoid and activating them. Since our parts have not arrived we still haven't tested their functionality, but so far our printed results seem to be in order. We have also wired the LCD screen and tested that it correctly displays what is being typed.
+
+We have now ordered all the hardware parts needed for the project, but they haven't been delivered yet, so we are hoping to have them by next week so that we can also put them together with the stands we are designing and 3D printing. We have started working on the CAD structures for our supports and are planning on printing them this next week.
+
+### Next week's plans
+
+Next week we are going to be working on the hardware and testing the actual implementation of our code to the devices as soon as they arrive. So far we have the code for the solenoids push and pull, however since they were ordered later, we are probably going to implement first the movement of the linear actuator, which should follow the x-axis from right to left (since we are going to be stamping upside down).
+
+We are also going to use the 3D printers to build the support for the solenoids and the box to keep most of our hardware connections, including the breadboards and the ATmega238.
 
 ## Sprint Review #2
 
