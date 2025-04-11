@@ -153,7 +153,6 @@ We are planning on working together on most goals for next week, getting the lin
 
 If everything works correctly, we also want to implement a feature connecting the braille machine to the blynk app, using the ESP32 interface so that we could try typing in our phones and getting the physical braille output.
 
-
 ## MVP Demo
 
 1. Show a system block diagram & explain the hardware implementation.
