@@ -139,9 +139,20 @@ We are also going to use the 3D printers to build the support for the solenoids 
 
 ### Last week's progress
 
+The solenoids that we ordered came, so we wired them with diodes and transistors and connected them to our MCU. From there, we debugged some issues with them correctly moving in and out, and realized two out of the six solenoids didn’t work properly, so we will be reordering them. We also completed and submitted CAD designs for a structure to hold the linear actuator and breadboard and also a structure to hold the actual solenoids.  We put the CAD files and a[ video](https://drive.google.com/file/d/1jELO6MgL8OEqHJt7nowW01g8Ehbm2qYE/view?usp=sharing) of the solenoids working with text input in the repo.
+
 ### Current state of project
 
+At this point, we can see the braille patterns pretty accurately and have the LCD display our words at the same time as each letter is translated. We have wired part of the hardware and now need to add the linear actuator so that the motor moves on the x-axis as it prints on paper. We are waiting for the 3D printer to assemble all pieces and verify that they are the expected and can support our hardware accordingly.
+
 ### Next week's plan
+
+Next week, we hope to figure out a way to attach a structure onto the tops of the solenoids so that when they move up and down they will stamp braille in the correct standardized dimensions. We also hope to get the linear actuator to work and move correctly as letters are stamped down. If the 3D print jobs are completed, we will also work on assembling the parts together.
+
+We are planning on working together on most goals for next week, getting the linear actuator to work and debug any problems we might find with it should take around 4 hours to get the motor working and 3-5 hours for an attachment to the solenoids depending on how we implement it. Assembling the 3D pieces together should be pretty straightforward, but if we need to fix something or maybe redesign it, it might take up to 3 hours.
+
+If everything works correctly, we also want to implement a feature connecting the braille machine to the blynk app, using the ESP32 interface so that we could try typing in our phones and getting the physical braille output.
+
 
 ## MVP Demo
 
