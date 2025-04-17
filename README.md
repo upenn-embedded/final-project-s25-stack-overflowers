@@ -165,6 +165,10 @@ If everything works correctly, we also want to implement a feature connecting th
 
    1. Show how you collected data and the outcomes.
 6. Show off the remaining elements that will make your project whole: mechanical casework, supporting graphical user interface (GUI), web portal, etc.
+
+   We are still waiting to get our mechanical support for the linear actuator from the 3D printer. This element will be the overall case for the entire system and will provide a place to place the ATmega238 along with the breadboards. Internaly the boc will also have a shelf to support the linear actuator, with a hole to the side were the moving part of our actuator will come out and move along the paper. This part of the linear actuator will also be propoerly connected to the solenoid support and the bottom of each solenoid will be attached to a spike to poke the braille with correct stamping.
+
+   In the firmware we will also finish implementing the connection between the feather and the serial terminal through UART so that we can use our phones to type our inputs. We will also work on debugging the current code and correcting any errors or delays which might be causing some unsynchronized movement between the solenoids and the actuator. 
 7. What is the riskiest part remaining of your project?
 
    1. How do you plan to de-risk this?
