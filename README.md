@@ -161,14 +161,22 @@ If everything works correctly, we also want to implement a feature connecting th
 4. Have you achieved some or all of your Software Requirements Specification (SRS)?
 
    1. Show how you collected data and the outcomes.
+   2. We are using the LCD screen, which communicates over SPI, in order to display our typed inputs into the serial terminal. The screen shows our written words correctly and the linear actuator moves forth with each character and back at every new line to start typing the next input.
+   3. Our motor and solenoids are also driven by GPIO. We changed our initial implementation, so we no longer needed to use PWM signals in order to rotate a stepper motor and instead are using GPIO to set the solenoids high or low according to our pattern.
+   4. The timing precision of the machine has also been working reasonably good. We move the linear actuator after stamping each letter and then activate the solenoids. When a new input is written, representing a new line on the LCD, the actuator moves fully back and restart by the beginning of the line. We can still try to work on the precision of the movements, changing delays for example, but overall our system is working as expected.
 5. Have you achieved some or all of your Hardware Requirements Specification (HRS)?
 
    1. Show how you collected data and the outcomes.
+   2. We changed the interface of our input communicating tot he ATMega, so instead of a separate keyboard we are using the serial terminal connection from our laptops to the MCU and LCD display, which has been working accordinly.
+   3. Our linear actuator and solenoids (stamping machine itself) are moving as expected. The linear actuator moves in the x-axis at every character and the solenoids are activated when it is no longer moving.
+   4. We are using two different power sources. The Linear Actuator and the solenoids need 12V, so we ordered a battery to provide enough voltage and since the actuator also draws significant current (8A) we looked for a 12V battery with enough current for it plus the six solenoids.
 6. Show off the remaining elements that will make your project whole: mechanical casework, supporting graphical user interface (GUI), web portal, etc.
 
    We are still waiting to get our mechanical support for the linear actuator from the 3D printer. This element will be the overall case for the entire system and will provide a place to place the ATmega238 along with the breadboards. Internaly the boc will also have a shelf to support the linear actuator, with a hole to the side were the moving part of our actuator will come out and move along the paper. This part of the linear actuator will also be propoerly connected to the solenoid support and the bottom of each solenoid will be attached to a spike to poke the braille with correct stamping.
 
-   In the firmware we will also finish implementing the connection between the feather and the serial terminal through UART so that we can use our phones to type our inputs. We will also work on debugging the current code and correcting any errors or delays which might be causing some unsynchronized movement between the solenoids and the actuator. 
+   In the firmware we will also finish implementing the connection between the feather and the serial terminal through UART so that we can use our phones to type our inputs. We will also work on debugging the current code and correcting any errors or delays which might be causing some unsynchronized movement between the solenoids and the actuator.
+
+   We are still need to create a web portal for the project and add its link to our repo. 
 7. What is the riskiest part remaining of your project?
 
    1. How do you plan to de-risk this?
