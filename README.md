@@ -156,7 +156,11 @@ If everything works correctly, we also want to implement a feature connecting th
 ## MVP Demo
 
 1. Show a system block diagram & explain the hardware implementation.
+
+   ![1745038406163](image/README/1745038406163.png)
 2. Explain your firmware implementation, including application logic and critical drivers you've written.
+
+   Our firmware currently takes in input using UART from the computer keyboard and converts it to bit representations of the Braille patterns. With these, it moves the solenoids up and down and the linear actuator right and left in order to create printed Braille. Using the UART driver, we store string inputs in a buffer and then process the string character-by-character by looking up the corresponding 6-bit Braille pattern from our table. In the bit representation, it will be a 1 if there is a bump and a 0 if there is no bump for each of the six Braille cells. These bits are then mapped to the six GPIO pins on our AtMega that control the solenoids in the activate_solenoids() function which sets and clears these pins with delays for stamping. We also have the functions actuator_move_out() and actuator_move_in() that control the GPIO pins to control the actuator for each character stamped out. The actuator moves out in between each character, and then will reset to the beginning of the line (moving in) for any new input, line overflow, or screen overflow. We also update an LCD screen in real-time as each character is stamped out so the user knows what is being written.
 3. Demo your device.
 4. Have you achieved some or all of your Software Requirements Specification (SRS)?
 
@@ -169,18 +173,24 @@ If everything works correctly, we also want to implement a feature connecting th
    1. Show how you collected data and the outcomes.
    2. We changed the interface of our input communicating tot he ATMega, so instead of a separate keyboard we are using the serial terminal connection from our laptops to the MCU and LCD display, which has been working accordinly.
    3. Our linear actuator and solenoids (stamping machine itself) are moving as expected. The linear actuator moves in the x-axis at every character and the solenoids are activated when it is no longer moving.
-   4. We are using two different power sources. The Linear Actuator and the solenoids need 12V, so we ordered a battery to provide enough voltage and since the actuator also draws significant current (8A) we looked for a 12V battery with enough current for it plus the six solenoids.
+   4. We are using two different power sources. The Linear Actuator and the solenoids need 12V, so we ordered a battery to provide enough voltage and since the actuator also draws significant current (5A) we looked for a 12V battery with 7A current to support the actuator plus the six solenoids.
 6. Show off the remaining elements that will make your project whole: mechanical casework, supporting graphical user interface (GUI), web portal, etc.
 
    We are still waiting to get our mechanical support for the linear actuator from the 3D printer. This element will be the overall case for the entire system and will provide a place to place the ATmega238 along with the breadboards. Internaly the boc will also have a shelf to support the linear actuator, with a hole to the side were the moving part of our actuator will come out and move along the paper. This part of the linear actuator will also be propoerly connected to the solenoid support and the bottom of each solenoid will be attached to a spike to poke the braille with correct stamping.
 
    In the firmware we will also finish implementing the connection between the feather and the serial terminal through UART so that we can use our phones to type our inputs. We will also work on debugging the current code and correcting any errors or delays which might be causing some unsynchronized movement between the solenoids and the actuator.
 
-   We are still need to create a web portal for the project and add its link to our repo. 
+   We are still need to create a web portal for the project and add its link to our repo.
 7. What is the riskiest part remaining of your project?
 
+   The riskiest remaining part of our project is attaching parts to the tops of the solenoids so that we are able to print braille in the correct standard size/format. Because the solenoids are bulky currently, we need to design and apply attachments to each solenoid that will allow them to stamp in the braille with correct spacing to be readable.
+
    1. How do you plan to de-risk this?
+
+      We plan to de-risk this by properly trying out different materials that we can use to stamp down, such as 3D printing or rubber tips, and we will try attaching them in multiple ways to make sure that they are stable. We will also test out our braille stamp options on the braille paper, and adjust the stamping pressure with the solenoids depending on the results.
 8. What questions or help do you need from the teaching team?
+
+   We mostly need to continue debugging the motion of the linear actuator and finish assembling it with the 3D printed parts. We also hope to integrate it with the feather and the Blynk app which we could need some support with.
 
 ## Final Project Report
 
