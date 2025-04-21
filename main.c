@@ -34,36 +34,37 @@ int buffer_index = 0;
 #define ACTUATOR_PORT PORTD
 #define ACTUATOR_DDR  DDRD
 
-//driver will actually use pwm not gpio
+//driver can probably use gpio not pwm
 //in video he uses 12v battery connected to driver and 3.7 lithium batteery for breadboard
 //vcc (3.7v), ground, both enable pins to positive on breadboard, two jumpers for pwm right and left
 //provide with 3.3 or 5 volts, he recommends 5volts
 //ground, vcc, ignore next two they are current alarms, forward/reverse next two and speed on pwm
 //if we dont need speed control, can just tie the pwm pins high or low
-//for moor left to right: batt neg, batt plus, two motor leads, doesnt matter which one where,
+//for move left to right: batt neg, batt plus, two motor leads, doesnt matter which one where,
 //but swap polarity to swap direction of each command
 //enable internal pulldown resistors?
 //active high signals
 //have to make sure logic ground and breadboard ground are
 //have to enable both, send pwm on one for forward, the other for reverse and thats it
 //both enable pins have to be high
-//do we need a 12v battery or is there another option//wall socket or smth?
 //motor supply is 6v-27v range
 
-//maybe done make it go all the way back in
 
 void actuator_move_out() {
-    ACTUATOR_PORT &= ~(1 << ACTUATOR_DOWN_PIN);   // RIGHT LOW
-    ACTUATOR_PORT |= (1 << ACTUATOR_UP_PIN);      // LEFT HIGH
-    printf("Actuator moving OUT\n");              // ✅ Corrected print
+    ACTUATOR_PORT &= ~(1 << ACTUATOR_DOWN_PIN);   // right LOW
+    ACTUATOR_PORT |= (1 << ACTUATOR_UP_PIN);      // left HIGH
+    printf("Actuator moving OUT\n");
+    //corresponds to the correct spacing of 12mm in between braille characters
+    //for double-size braille
     _delay_ms(2400);
     ACTUATOR_PORT &= ~(1 << ACTUATOR_UP_PIN);     // stop
 }
 
 void actuator_move_in() {
-    ACTUATOR_PORT &= ~(1 << ACTUATOR_UP_PIN);     // LEFT LOW
-    ACTUATOR_PORT |= (1 << ACTUATOR_DOWN_PIN);    // RIGHT HIGH
-    printf("Actuator moving IN\n");               // ✅ Corrected print
+    ACTUATOR_PORT &= ~(1 << ACTUATOR_UP_PIN);     // left LOW
+    ACTUATOR_PORT |= (1 << ACTUATOR_DOWN_PIN);    // right HIGH
+    printf("Actuator moving IN\n");
+    //time to make it go all the way back in fromm full extension
     _delay_ms(15000);
     ACTUATOR_PORT &= ~(1 << ACTUATOR_DOWN_PIN);   // stop
 }
@@ -81,7 +82,7 @@ void activate_solenoids(uint8_t pattern) {
     //testing without hardware:
     printf("Braille pattern: 0b");
     for (int i = 5; i >= 0; i--) {
-        printf("%d", (pattern >> i) & 1); // Print each bit from dot6 to dot1
+        printf("%d", (pattern >> i) & 1); // print each bit from dot6 to dot1
     }
     printf("\n");
     printf("Solenoids activated on pins: ");
@@ -93,7 +94,7 @@ void activate_solenoids(uint8_t pattern) {
     printf("\n\n");
    
     _delay_ms(300); // time to press
-    SOLENOID_PORT &= ~0b00111111; //what does this line do?
+    SOLENOID_PORT &= ~0b00111111;
 }
 
 
@@ -151,7 +152,7 @@ int main(void) {
     LCD_setScreen(BLACK);
    
    
-    // set solenoid pins (PD0?PD5) as output
+    // set solenoid pins (PD0 through PD5) as output
     SOLENOID_DDR |= 0b00111111;
    
     //setup actuator
@@ -163,6 +164,7 @@ int main(void) {
     while (1) {
         if (uart_available()) {
         char c = uart_receive(NULL);
+//        printf("Got: %c\n", c);
 
         if (c == '\r' || c == '\n') {
             buffer[buffer_index] = '\0'; // end
@@ -182,6 +184,8 @@ int main(void) {
                 actuator_move_out();
                 char_count++;
                
+                //maximum extension of the linear actuator
+                //moves it back in to start a new line after 14 char
                 if (char_count == 14) {
                 actuator_move_in();
                 char_count = 0;
@@ -225,6 +229,7 @@ int main(void) {
     }
 }
 
+////test just the linear actuator
 //int main(void) {
 //    // Set PD2 and PD3 as output
 //    ACTUATOR_DDR |= (1 << ACTUATOR_UP_PIN) | (1 << ACTUATOR_DOWN_PIN);
