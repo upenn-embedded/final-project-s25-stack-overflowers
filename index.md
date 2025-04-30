@@ -2,18 +2,21 @@
 
 ### 1. Video
 
-[Insert final project video here]
-
-* The video must demonstrate your key functionality.
-* The video must be 5 minutes or less.
-* Ensure your video link is accessible to the teaching team. Unlisted YouTube videos or Google Drive uploads with SEAS account access work well.
-* Points will be removed if the audio quality is poor - say, if you filmed your video in a noisy electrical engineering lab.
+<iframe src="https://drive.google.com/file/d/1L4gFSMpI8Uf4D2XdhJdyWBTEEiRS5Ieu/preview" 
+        width="640" height="480" allow="autoplay"></iframe>
 
 ### 2. Images
 
-[Insert final project images here]
+![I6](I6.png)
+![I1](I1.png)
 
-*Include photos of your device from a few angles. If you have a casework, show both the exterior and interior (where the good EE bits are!).*
+<p>
+  <img src="I7.png" alt="I6" width="400" style="margin-right:10px;"/>
+  <img src="I2.png" alt="I1" width="300" style="margin-right:10px;"/>
+    <img src="I4.png" alt="I1" width="200" style="margin-right:10px;"/>
+  <img src="I5.png" alt="I7" width="220" style="margin-right:10px;"/>
+  <img src="I3.png" alt="I7" width="200" style="margin-right:10px;"/>
+</p>
 
 ### 3. Results
 
@@ -29,11 +32,11 @@ Our proposal was to make braille printing more accessible and cheaper. From our 
 | SRS-04 | The linear actuator will move the stamping mechanism, positioning the stamp at the correct location on the paper. The actuator should only move the stamp after it is pressed.                                                                                                            |
 | SRS-05 | The software will have debouncing to filter out noise from the keyboard.                                                                                                                                                                                                                  |
 
-We could correctly program the firmware to recognize each character we put on the terminal and relate it to a specific braille pattern. We changed our implementation from using a rotation stamping moving up and down to a solenoid stamp, so we weren't required to implement PWM signals and used simply GPIO to control the activation of the solenoids and the linear actuator. In this case, instead of  measuring the precision of our design by having the right timing for the stepper and servo motor to move, we assured that our linear actuator started fully extended at the beginning of each input and that it stopped when the solenoids were activated to stamp they paper and moved again after each character. We calculated the delay for separating each stamp and defined the maximum characters that would be in one line so that when that limit was reached the linear actuator would automatically go back to its full extension.
+We could correctly program the firmware to recognize each character we put on the terminal and relate it to a specific braille pattern. We changed our implementation from using a rotation stamping moving up and down to a solenoid stamp, so we weren't required to implement PWM signals and used simply GPIO to control the activation of the solenoids and the linear actuator. In this case, instead of  measuring the precision of our design by having the right timing for the stepper and servo motor to move, we assured that our linear actuator started fully extended at the beginning of each input and that it stopped when the solenoids were activated to stamp they paper and moved again after each character. We calculated the delay for separating each stamp and defined the maximum characters that would be in one line so that when that limit was reached the linear actuator would automatically go back to its full extension.
 
 For our serial communication requirement, we used SPI for the LCD screen, which displayed each character correctly as it was being stamped. We also implemented UART by connecting the ESP32 to the blynk app and typing the inputs out on our phone instead of only using the serial terminal on our laptops.
 
-Even though we were only physically connected to PD0 with the ESP32, we found that sharing the USART0 interface between application data (from the ESP) and debug output (sent from the mcu to the terminal) caused interference. Our most logical explanation is that the bidirectional UART, as well as its buffers and timing must be synchronized in showing and receiving inputs and outputs. In this case when the ESP and the terminal try to send signals and display the output from the mcu,  sharing a single USART resource, the serial communication breaks down. Disconnecting the ESP from PD0 resolved the issue, and allowed us to receive the inputs from the laptop again, confirming that PD0 was being affected logically by the shared UART usage, not electrically. However, since our main goal was to be able to use the blynk interface, we chose to keep the wire plugged in and make full use of the ESP.
+Even though we were only physically connected to PD0 with the ESP32, we found that sharing the USART0 interface between application data (from the ESP) and debug output (sent from the mcu to the terminal) caused interference. Our most logical explanation is that the bidirectional UART, as well as its buffers and timing must be synchronized in showing and receiving inputs and outputs. In this case when the ESP and the terminal try to send signals and display the output from the mcu,  sharing a single USART resource, the serial communication breaks down. Disconnecting the ESP from PD0 resolved the issue, and allowed us to receive the inputs from the laptop again, confirming that PD0 was being affected logically by the shared UART usage, not electrically. However, since our main goal was to be able to use the blynk interface, we chose to keep the wire plugged in and make full use of the ESP.
 
 Some of our requirements did change from the moment we decided to take the approach of using solenoids instead of a rotating stamping machine, like changing from pwm to GPIO.
 
@@ -56,7 +59,7 @@ SRS-04 The linear actuator will move the stamping mechanism, positioning the sta
 Overall we achieved most of our goals, having the printer process inputs as expected and our actuator and solenoids move accordingly. We encountered some difficulty in controlling the pressure that the solenoids would be pressed in the paper, making it somewhat difficult to see the stamping sometimes. So we used carbon paper to make the pattern more evident for demonstration purposes. We 3D printed our structure supporting the linear actuator and a smaller box holding the solenoids. Our smaller box broke a little and despite sending a new model to be printed we didn't get it in time. The thickness of our box was bigger than we expected so when we changed our code so that the actuator started all extended and moved a little back in after each character we also made sure that it didn't go all the way back in, so that the solenoid box was still properly attached to the actuator.
 
 A few of our original ideas of implementation of the project changed before we actually built the project. Following feedback from the professor, our first change was to use the serial terminal and UART communication from our own laptops as the inputs for the typed words.
-Our initial idea also involved using a stepper motor to rotate a wheel machine which would move both horizontally and vertically to stamp each letter. From talking to our classmates we got feedback on how to simplify our mechanism using a set of six solenoids and our linear actuator to move horizontally on our paper and activate the precise solenoids to create the accurate letter. In this case, we were also able to work mainly with GPIO to activate the solenoids  instead of needing PWMs to rotate the wheel and could be more precise with the timing and spacing of the stamping.
+Our initial idea also involved using a stepper motor to rotate a wheel machine which would move both horizontally and vertically to stamp each letter. From talking to our classmates we got feedback on how to simplify our mechanism using a set of six solenoids and our linear actuator to move horizontally on our paper and activate the precise solenoids to create the accurate letter. In this case, we were also able to work mainly with GPIO to activate the solenoids  instead of needing PWMs to rotate the wheel and could be more precise with the timing and spacing of the stamping.
 On the practical side, we encountered a few issues in attaching a spike structure to the bottom of the solenoids and positioning them closer so that they would resemble a normal braille size. At the end we were able to superglue point structures to the solenoids and punctuate the bottom of the paper. Another thing we didn't consider was the fact that we wouldn't control the pressure of the solenoids stamp.
 
 *Validating Requirements:*
