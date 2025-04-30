@@ -37,7 +37,6 @@ void setup()
   Serial.println("ESP32 initialized and connected to Blynk");
 }
 
-void loop()
 {
   Blynk.run();
   
