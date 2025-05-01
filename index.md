@@ -2,7 +2,7 @@
 
 ### 1. Video
 
-Here is a [link](https://drive.google.com/file/d/1xeawdyDZGxui-g1Ykbre4UoAcS7RQmn_/view?usp=sharing) to our final project!
+Here is a [link](https://drive.google.com/file/d/1xeawdyDZGxui-g1Ykbre4UoAcS7RQmn_/view?usp=sharing) to our final project! :)
 
 ### 2. Images
 
