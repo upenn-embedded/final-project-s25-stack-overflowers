@@ -2,8 +2,7 @@
 
 ### 1. Video
 
-<iframe src="https://drive.google.com/file/d/1L4gFSMpI8Uf4D2XdhJdyWBTEEiRS5Ieu/preview" 
-        width="640" height="480" allow="autoplay"></iframe>
+Here is a [link](https://drive.google.com/file/d/1xeawdyDZGxui-g1Ykbre4UoAcS7RQmn_/view?usp=sharing) to our final project!
 
 ### 2. Images
 
@@ -43,8 +42,11 @@ Some of our requirements did change from the moment we decided to take the appro
 *Validating requirements:*
 
 SRS-01 The microcontroller will process each letter of the text input and connect it to its corresponding braille. We can test its accuracy by plugging in sample characters and evaluating the different outputs of the mcu. | Confirmed with print statements sent to the terminal and by showing
+![1743798297162](image/README/1743798297162.png)
 
 SRS-04 The linear actuator will move the stamping mechanism, positioning the stamp at the correct location on the paper. The actuator should only move the stamp after it is pressed. | Confirmed by the output. Maybe we should take a pic of the logic analyzer to show the signals being transmitted in the esp ??**
+
+Here is a [link](https://drive.google.com/file/d/1Mm9ABieJjgD0r2lmUwMEIsag-uQJrzTZ/view?usp=sharing) to the linear actuator moving. 
 
 #### 3.2 Hardware Requirements Specification (HRS) Results
 
@@ -64,7 +66,15 @@ On the practical side, we encountered a few issues in attaching a spike structur
 
 *Validating Requirements:*
 HRS-02 It will also display the typed text to a LCD screen (I2C interface) to provide user feedback before printing. We will test the keyboard and the screen by seeing whether the later is displaying the correct keyboard inputs in real time. | Confirmed as observed in video. Each character appears on the screen simultaneously as its being printed.
+
+Here is a [link](https://drive.google.com/file/d/1S9dsCvcRlnqZN1PVkVOyjlvBThYYR3gt/view?usp=sharing) to the video. 
+
+
 HRS-04 The motor will be mounted on a linear actuator, allowing it to move up and down (for stamping) and along the X-axis (for letter placement), working similarly to a plotter. A motor driver will be used to control the linear actuator, ensuring reliable movement without overloading the MCU. | Partially confirmed. We used the linear actuator to move only in the x-direction, which worked precisely in timing and consistency with the motor driver.
+
+Here is a [link](https://drive.google.com/file/d/1oe5jddUY3IOjdkLFp_U5J3e_CTjTlkMo/view?usp=sharing) to the video. 
+
+
 
 ### 4. Conclusion
 
