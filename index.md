@@ -54,12 +54,15 @@ Some of our requirements did change from the moment we decided to take the appro
 
 #### 3.2 Hardware Requirements Specification (HRS) Results
 
+
 | ID     | Description                                                                                                                                                                                                                                                                       |
 | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | HRS-01 | The device will require a keyboard module for text entry, this will communicate with the ATmega238 via PS/2.                                                                                                                                                                      |
 | HRS-02 | It will also display the typed text to a LCD screen (I2C interface) to provide user feedback before printing. We will test the keyboard and the screen by seeing whether the later is displaying the correct keyboard inputs in real time.                                        |
 | HRS-03 | The MCU will generate a PWM signal to control a stepper motor, which will rotate the Braille stamp mechanism to the correct character position. While working on this part we will ensure that the PWM signals are accurately rotating the stamp with a negligible error accuracy |
 | HRS-04 | A linear actuator will move the stamp up and down to imprint the letters on to the paper A motor driver will be used to control the linear actuator, ensuring reliable movement without overloading the MCU.                                                                      |
+
+
 
 Overall we achieved most of our goals, having the printer process inputs as expected and our actuator and solenoids move accordingly. We encountered some difficulty in controlling the pressure that the solenoids would be pressed in the paper, making it somewhat difficult to see the stamping outcomes. We 3D printed our structure supporting the linear actuator and with enough space to also hold the breadboards and wires, as well as a smaller box holding the solenoids. Our bigger box had a space for our LCD screen, which correctly showed each character being stamped through SPI. The thickness of our box was bigger than we expected so when we changed our code so that the actuator never moved fully back in. Even when starting at the most retrieved position, the actuator was already slight extended making sure that the solenoid box was still properly attached to it, we recalculated the space it should move after each character and made sure that the actuator was only active after the solenoids were activated to ensure precise stamping.
 
@@ -70,6 +73,7 @@ Our initial idea also involved using a stepper motor to rotate a wheel machine w
 On the practical side, we encountered a few issues in attaching a spike structure to the bottom of the solenoids and positioning them closer so that they would resemble a normal braille size. At the end, we were able to superglue pointy structures to the solenoids to punctuate the bottom of the paper, although the light pressure didn't allow us to strongly see the correct pattern on paper.
 
 We powered our 12V components through a battery but ended up not using a buck converter to step it down to 5V. Instead we used the ATmega output for 5V, but still had to shift down the voltage to 3.3 using the level shifter so that we could connect the ESP32. The device might also not be considered portable due to the size of the main box, however it would be perfectly plausible for each household with a visually disabled person to acquire and learn how to use one for a fairly cheap price.
+
 
 *Validating Requirements:*
 
