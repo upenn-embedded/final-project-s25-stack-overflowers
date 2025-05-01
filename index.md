@@ -44,8 +44,8 @@ Some of our requirements did change from the moment we decided to take the appro
 
 *Validating requirements:*
 
-SRS-01 The microcontroller will process each letter of the text input and connect it to its corresponding braille. We can test its accuracy by plugging in sample characters and evaluating the different outputs of the mcu. | Confirmed with print statements sent to the terminal and by showing
-![1743798297162](image/README/1743798297162.png)
+SRS-01 The microcontroller will process each letter of the text input and connect it to its corresponding braille. We can test its accuracy by plugging in sample characters and evaluating the different outputs of the mcu. | Confirmed with print statements sent to the terminal and by showing the activation of each solenoid
+![ex](ex.png)
 
 SRS-04 The linear actuator will move the stamping mechanism, positioning the stamp at the correct location on the paper. The actuator should only move the stamp after it is pressed. | Confirmed by the output. 
 
