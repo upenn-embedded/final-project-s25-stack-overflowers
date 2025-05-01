@@ -1,11 +1,4 @@
-/*
- * ESE519_Lab4_Pong_Starter.c
- *
- * Created: 9/21/2021 21:21:21 AM
- * Author : J. Ye
- */
-
- #define F_CPU 16000000UL
+#define F_CPU 16000000UL
 
  #include <avr/io.h>
  #include "lib\ST7735.h"
@@ -15,6 +8,7 @@
  #include <stdlib.h>
  #include <time.h>
  #include "uart.h"
+#include <avr/interrupt.h>
 
 #define DOT1_PIN PC0
 #define DOT2_PIN PC1
@@ -26,29 +20,15 @@
 #define SOLENOID_DDR  DDRC
 #define MAX_LINE_LENGTH 64
 char buffer[MAX_LINE_LENGTH];
-int buffer_index = 0;
+volatile int buffer_index = 0;
+volatile uint8_t line_ready = 0;
 
 #define ACTUATOR_UP_PIN   PD2
 #define ACTUATOR_DOWN_PIN PD3
 
 #define ACTUATOR_PORT PORTD
 #define ACTUATOR_DDR  DDRD
-
-//driver can probably use gpio not pwm
-//in video he uses 12v battery connected to driver and 3.7 lithium batteery for breadboard
-//vcc (3.7v), ground, both enable pins to positive on breadboard, two jumpers for pwm right and left
-//provide with 3.3 or 5 volts, he recommends 5volts
-//ground, vcc, ignore next two they are current alarms, forward/reverse next two and speed on pwm
-//if we dont need speed control, can just tie the pwm pins high or low
-//for move left to right: batt neg, batt plus, two motor leads, doesnt matter which one where,
-//but swap polarity to swap direction of each command
-//enable internal pulldown resistors?
-//active high signals
-//have to make sure logic ground and breadboard ground are
-//have to enable both, send pwm on one for forward, the other for reverse and thats it
-//both enable pins have to be high
-//motor supply is 6v-27v range
-
+#define BUFFER_COUNT 2
 
 void actuator_move_out() {
     ACTUATOR_PORT &= ~(1 << ACTUATOR_DOWN_PIN);   // right LOW
@@ -65,8 +45,17 @@ void actuator_move_in() {
     ACTUATOR_PORT |= (1 << ACTUATOR_DOWN_PIN);    // right HIGH
     printf("Actuator moving IN\n");
     //time to make it go all the way back in fromm full extension
-    _delay_ms(15000);
+    _delay_ms(2400);
     ACTUATOR_PORT &= ~(1 << ACTUATOR_DOWN_PIN);   // stop
+}
+
+void actuator_fully_extend() {
+    ACTUATOR_PORT &= ~(1 << ACTUATOR_DOWN_PIN);   // right LOW
+    ACTUATOR_PORT |= (1 << ACTUATOR_UP_PIN);      // left HIGH
+    printf("Fully extending actuator\n");
+    // Longer time to ensure full extension
+    _delay_ms(15000);
+    ACTUATOR_PORT &= ~(1 << ACTUATOR_UP_PIN);     // stop
 }
 
 
@@ -79,7 +68,7 @@ void activate_solenoids(uint8_t pattern) {
     _delay_ms(1000);  // delay to stamp down
     SOLENOID_PORT &= ~0b00111111;//clear solenoids again
    
-    //testing without hardware:
+//    testing without hardware:
     printf("Braille pattern: 0b");
     for (int i = 5; i >= 0; i--) {
         printf("%d", (pattern >> i) & 1); // print each bit from dot6 to dot1
@@ -97,8 +86,6 @@ void activate_solenoids(uint8_t pattern) {
     SOLENOID_PORT &= ~0b00111111;
 }
 
-
-
 // 6 bits: dot1 is LSB, dot6 is MSB
 typedef struct {
     char ascii;
@@ -108,8 +95,8 @@ typedef struct {
 BrailleMap braille_table[] = {
     {'a', 0b000001},
     {'b', 0b000011},
-    {'c', 0b000101},
-    {'d', 0b001101},
+    {'c', 0b001001},
+    {'d', 0b011001},
     {'e', 0b010001},
     {'f', 0b001011},
     {'g', 0b011011},
@@ -151,7 +138,6 @@ int main(void) {
     lcd_init();      
     LCD_setScreen(BLACK);
    
-   
     // set solenoid pins (PD0 through PD5) as output
     SOLENOID_DDR |= 0b00111111;
    
@@ -159,6 +145,8 @@ int main(void) {
     ACTUATOR_DDR |= (1 << ACTUATOR_UP_PIN) | (1 << ACTUATOR_DOWN_PIN);
     int cursor_x = 0;
     int cursor_y = 0;
+   
+    actuator_fully_extend();
 
 
     while (1) {
@@ -181,16 +169,15 @@ int main(void) {
                 uint8_t pattern = get_braille_pattern(buffer[i]);
                 activate_solenoids(pattern);
                
-                actuator_move_out();
+                actuator_move_in();//
                 char_count++;
                
                 //maximum extension of the linear actuator
                 //moves it back in to start a new line after 14 char
                 if (char_count == 14) {
-                actuator_move_in();
+                actuator_move_out();//changed from move in
                 char_count = 0;
                 }
-               
                
                 //go to next line if overflow
                 if (cursor_x >= LCD_WIDTH - 6) {
@@ -207,12 +194,12 @@ int main(void) {
                     cursor_x = 0;
                     cursor_y = 0;
                    
-                    actuator_move_in();
+                    actuator_move_out(); //changed from move in
                    
                 }
             }
             //start new input on new line
-            actuator_move_in();
+            actuator_move_out(); //changed from move in
             cursor_y += 10;
             cursor_x = 0;
 
@@ -240,3 +227,156 @@ int main(void) {
 //       _delay_ms(2000); // Wait 2 seconds
 //    }
 //}
+
+//
+//// double buffers
+//volatile struct {
+//    char data[BUFFER_COUNT][MAX_LINE_LENGTH];
+//    volatile uint8_t write_index;    //buffer being written to
+//    volatile uint8_t read_index;     // buffer to be read
+//    volatile uint8_t position;       //pos in writing buffer
+//    volatile uint8_t buffer_ready;   // flag to show a buffer is ready to read
+//    volatile uint8_t buffer_full;    // Flag to show curr write buffer is full
+//} uart_buffer = {
+//    .write_index = 0,
+//    .read_index = 1,
+//    .position = 0,
+//    .buffer_ready = 0,
+//    .buffer_full = 0
+//};
+//
+//ISR(USART0_RX_vect) {
+//    // read the received character
+//    char c = UDR0;
+//    
+//    // check error flags
+//    uint8_t status = UCSR0A;
+//    if (status & ((1 << FE0) | (1 << DOR0) | (1 << UPE0))) {
+//        // clear error
+//        return;
+//    }
+//    
+//    // debug message
+//    static uint8_t debug_counter = 0;
+//    
+//    // add to buffer
+//    if (uart_buffer.position < MAX_LINE_LENGTH - 1) {
+//        uart_buffer.data[uart_buffer.write_index][uart_buffer.position++] = c;
+//        if (c == '\r' || c == '\n') {
+//            // add null terminate
+//            uart_buffer.data[uart_buffer.write_index][uart_buffer.position-1] = '\0';
+//            
+//            // mark as ready
+//            uart_buffer.buffer_ready = 1;
+//
+//            uint8_t temp = uart_buffer.write_index;
+//            uart_buffer.write_index = uart_buffer.read_index;
+//            uart_buffer.read_index = temp;
+//            uart_buffer.position = 0;
+//        }
+//    }
+//    debug_counter++;
+//}
+//
+//// check if line is available
+//uint8_t uart_line_available(void) {
+//    return uart_buffer.buffer_ready;
+//}
+//
+//// function to get line
+//char* uart_get_line(void) {
+//    if (uart_buffer.buffer_ready) {
+//        return (char*)uart_buffer.data[uart_buffer.read_index];
+//    }
+//    return NULL;
+//}
+//
+//void uart_line_processed(void) {
+//    uart_buffer.buffer_ready = 0;
+//}
+//
+//int main(void) {
+//    // initialize
+//    uart_init();
+//    lcd_init();
+//    LCD_setScreen(BLACK);
+//    
+//    // set solenoids
+//    SOLENOID_DDR |= 0b00111111;
+//    
+//    // setup actuator pins
+//    ACTUATOR_DDR |= (1 << ACTUATOR_UP_PIN) | (1 << ACTUATOR_DOWN_PIN);
+//    
+//    LCD_drawString(0, 0, "uart ready", WHITE, BLACK);
+//    
+//    // enable interrupts
+//    sei();
+//    
+//    //test
+//    printf("uart test\r\n");
+//    
+//    int cursor_x = 0;
+//    int cursor_y = 20;
+//    
+//    actuator_fully_extend();
+//
+//    while (1) {
+//        // check if available
+//        if (uart_line_available()) {
+//            // Get the line
+//            char* current_line = uart_get_line();
+//            
+//            // update
+//            LCD_drawString(0, 10, "processing", WHITE, BLACK);
+//            
+//            actuator_fully_extend();
+//            int char_count = 0;
+//            
+//            // process characters in line
+//            for (int i = 0; current_line[i] != '\0'; i++) {
+//                // display
+//                LCD_drawChar(cursor_x, cursor_y, current_line[i], WHITE, BLACK);
+//                cursor_x += 6;
+//                
+//                // map solenoids
+//                uint8_t pattern = get_braille_pattern(current_line[i]);
+//                activate_solenoids(pattern);
+//
+//                actuator_move_in();
+//                char_count++;
+//                
+//                if (char_count == 14) {
+//                    actuator_move_out();
+//                    char_count = 0;
+//                }
+//                
+//                if (cursor_x >= LCD_WIDTH - 6) {
+//                    cursor_x = 0;
+//                    cursor_y += 10;
+//                }
+//                
+//                if (cursor_y >= LCD_HEIGHT - 10) {
+//                    LCD_setScreen(BLACK);
+//                    LCD_drawString(0, 0, "uart is ready", WHITE, BLACK);
+//                    cursor_x = 0;
+//                    cursor_y = 20;
+//                    actuator_move_out();
+//                }
+//            }
+//            
+//            //mark as processed
+//            uart_line_processed();
+//            
+//            // get ready for next input
+//            actuator_move_out();
+//            cursor_y += 10;
+//            cursor_x = 0;
+//            
+//            LCD_drawString(0, 10, "ready for next line", WHITE, BLACK);
+//        }
+//        
+//        _delay_ms(10);
+//    }
+//}
+//
+//
