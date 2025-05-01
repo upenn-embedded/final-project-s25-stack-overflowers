@@ -215,7 +215,16 @@ If you’ve never made a GitHub pages website before, you can follow this webpag
 
 ### 2. Images
 
-[Insert final project images here]
+![I6](I6.png)
+![I1](I1.png)
+
+<p>
+  <img src="I7.png" alt="I6" width="400" style="margin-right:10px;"/>
+  <img src="I2.png" alt="I1" width="300" style="margin-right:10px;"/>
+    <img src="I4.png" alt="I1" width="200" style="margin-right:10px;"/>
+  <img src="I5.png" alt="I7" width="220" style="margin-right:10px;"/>
+  <img src="I3.png" alt="I7" width="200" style="margin-right:10px;"/>
+</p>
 
 *Include photos of your device from a few angles. If you have a casework, show both the exterior and interior (where the good EE bits are!).*
 
@@ -231,13 +240,11 @@ We ran into a few problems when actually testing our stamp. We attached spike me
 
 *Based on your quantified system performance, comment on how you achieved or fell short of your expected requirements.*
 
-
 We could correctly program the firmware to recognize each character we put on the terminal and relate it to a specific braille pattern. We changed our implementation from using a rotation stamping moving up and down to a solenoid stamp, so we weren't required to implement PWM signals and used simply GPIO to control the activation of the solenoids and the linear actuator. In this case, instead of  measuring the precision of our design by having the right timing for the stepper and servo motor to move, we assured that our linear actuator started either fully extended or fully retracted at the beginning of each input and that it stopped when the solenoids were activated to stamp the paper and moved again after each character. We calculated the delay for separating each stamp and defined the maximum characters that would be in one line so that when that limit was reached the linear actuator would automatically go back to its initial placement.
 
-For our serial communication requirement, we used SPI for the LCD screen, which displayed each character correctly as it was being stamped. We also implemented UART by connecting the ESP32 to the blynk app and ~~using interrupts~~ to capture the inputs out from our phone instead of only using only the serial terminal on our laptops. 
+For our serial communication requirement, we used SPI for the LCD screen, which displayed each character correctly as it was being stamped. We also implemented UART by connecting the ESP32 to the blynk app and ~~using interrupts~~ to capture the inputs out from our phone instead of only using only the serial terminal on our laptops.
 
 *Did your requirements change? If so, why? Failing to meet a requirement is acceptable; understanding the reason why is critical!*
-
 
 Even though we were only physically connected to PD0 with the ESP32, we found that sharing the USART0 interface between application data (from the ESP) and debug output (sent from the mcu to the terminal) caused interference. Our most logical explanation is that the bidirectional UART, as well as its buffers and timing must be synchronized in showing and receiving inputs and outputs. In this case when the ESP and the terminal tried to send signals and display the output from the mcu,  sharing a single USART resource, the serial communication broke down. Disconnecting the ESP from PD0 resolved the issue, and allowed us to receive the inputs from the laptop again, confirming that PD0 was being affected logically by the shared UART, not electrically. However, since our main goal was to be able to use the blynk interface, we chose to keep the wire plugged in and make full use of the ESP, disconnecting the serial terminal from our browser. ~~Changing our firmware from pooling to implementing UART while capturing inputs sent by the esp or the serial terminal also proved a bit tricky because our debug statements interfered with the communication and affected the responsiveness to our inputs. In this case, our proposed solution was to~~
 
@@ -268,10 +275,10 @@ We powered our 12V components through a battery but ended up not using a buck co
 
 *Validate at least two requirements, showing how you tested and your proof of work (videos, images, logic analyzer/oscilloscope captures, etc.).*
 
-| ID     | Description                                                                                                                                                                                                                                                                                    | Validation Outcome                                                                                                                                                                                                                                                                                                                         |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| HRS-02 | It will also display the typed text to a LCD screen (I2C interface) to provide user feedback before printing. We will test the keyboard and the screen by seeing whether the later is displaying the correct keyboard inputs in real time.                                                     | Confirmed as observed in video. Each character appears on the screen simultaneously as its being printed.                                                                                                                                                                                                                                  |
-| HRS-04 | The motor will be mounted on a linear actuator, allowing it to move up and down (for stamping) and along the X-axis (for letter placement), working similarly to a plotter. A motor driverwill be used to control the linear actuator, ensuring reliable movement without overloading the MCU. | Partially confirmed. We used the linear actuator to move only in the x-direction, which worked precisely in timing and consistency with the motor driver. For the stamping up and down we used solenoids, connected and activated by the mcu and using diodes as a way to protect them from high voltages spikes as the motor turns off.  |
+| ID     | Description                                                                                                                                                                                                                                                                                    | Validation Outcome                                                                                                                                                                                                                                                                                                                       |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HRS-02 | It will also display the typed text to a LCD screen (I2C interface) to provide user feedback before printing. We will test the keyboard and the screen by seeing whether the later is displaying the correct keyboard inputs in real time.                                                     | Confirmed as observed in video. Each character appears on the screen simultaneously as its being printed.                                                                                                                                                                                                                                |
+| HRS-04 | The motor will be mounted on a linear actuator, allowing it to move up and down (for stamping) and along the X-axis (for letter placement), working similarly to a plotter. A motor driverwill be used to control the linear actuator, ensuring reliable movement without overloading the MCU. | Partially confirmed. We used the linear actuator to move only in the x-direction, which worked precisely in timing and consistency with the motor driver. For the stamping up and down we used solenoids, connected and activated by the mcu and using diodes as a way to protect them from high voltages spikes as the motor turns off. |
 
 ### 4. Conclusion
 
